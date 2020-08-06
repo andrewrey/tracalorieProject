@@ -12,9 +12,9 @@ const ItemCtrl = (function () {
   // Data Structure / State
   const data = {
     items: [
-      { id: 0, name: "Steak Dinner", Calories: 1200 },
-      { id: 0, name: "Cookie", Calories: 400 },
-      { id: 0, name: "Eggs", Calories: 300 },
+      { id: 0, name: "Steak Dinner", calories: 1200 },
+      { id: 0, name: "Cookie", calories: 400 },
+      { id: 0, name: "Eggs", calories: 300 },
     ],
     currentItem: null,
     totalCalories: 0,
@@ -33,8 +33,29 @@ const ItemCtrl = (function () {
 
 // UI Controller
 const UICtrl = (function () {
+  const UISelectors = {
+    itemList: "#item-list",
+  };
+
   // Public Methods
-  return {};
+  return {
+    populateItemList: function (items) {
+      let html = "";
+
+      items.forEach((item) => {
+        html += `
+          <li class="collection-item" id="item-${item.id}">
+            <strong>${item.name}: </strong> <em>${item.calories} Calories</em>
+            <a href="#" class="secondary-content">
+              <i class="edit-item fa fa-pencil"></i>
+            </a>
+          </li>
+        `;
+      });
+      // Insert list items
+      document.querySelector(UISelectors.itemList).innerHTML = html;
+    },
+  };
 })();
 
 // App Controller
@@ -42,7 +63,11 @@ const App = (function (ItemCtrl, UICtrl) {
   //Public methods
   return {
     init: function () {
-      console.log("Initializing App...");
+      // Fetch items from data structure
+      const items = ItemCtrl.getItems();
+
+      // Populate list with items
+      UICtrl.populateItemList(items);
     },
   };
 })(ItemCtrl, UICtrl);
